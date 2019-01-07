@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/FlorianKempenich/TOOCS-asdf.svg?branch=master)](https://travis-ci.org/FlorianKempenich/TOOCS-asdf) [![Ansible Role](https://img.shields.io/ansible/role/36149.svg)](https://galaxy.ansible.com/FlorianKempenich/toocs_asdf)
+[![Build Status](https://travis-ci.org/TOOCS/asdf.svg?branch=master)](https://travis-ci.org/TOOCS/asdf) [![Ansible Role](https://img.shields.io/ansible/role/36149.svg)](https://galaxy.ansible.com/FlorianKempenich/toocs_asdf)
 
 
 # TOOCS / Ansible Role: `toocs_asdf`
