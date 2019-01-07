@@ -1,0 +1,41 @@
+- name: "Install requirements - UBUNTU"
+  apt:
+    name:
+      - automake
+      - autoconf
+      - libreadline-dev
+      - libncurses-dev
+      - libssl-dev
+      - libyaml-dev
+      - libxslt-dev
+      - libffi-dev
+      - libtool
+      - unixodbc-dev
+    state: latest
+    update_cache: yes
+  become: yes
+  when: ansible_os_family == "Debian"
+
+- name: "Install requirements - MAC OSX"
+  homebrew:
+    name:
+     - coreutils
+     - automake
+     - autoconf
+     - openssl
+     - libyaml
+     - readline
+     - libxslt
+     - libtool
+     - unixodbc
+    state: latest
+    update_homebrew: yes
+  become: no
+  when: ansible_os_family == "Darwin"
+
+- name: "Install `asdf` - Version: {{ asdf_version }} - Checkout `asdf` to `~/.asdf`"
+  git:
+    repo: "git@github.com:asdf-vm/asdf.git"
+    dest: "{{ ansible_env.HOME }}/.asdf"
+    version: "{{ asdf_version }}"
+    force: yes
