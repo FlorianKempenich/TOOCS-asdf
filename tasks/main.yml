@@ -42,3 +42,4 @@
 
 - name: "Set up shell"
   import_tasks: setup-shell.yml
+  when: not skip_shell_setup

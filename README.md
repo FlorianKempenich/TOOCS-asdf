@@ -54,7 +54,10 @@ Source: [official 'asdf' setup](https://github.com/asdf-vm/asdf#setup)
 ## Role Variables
 * ### `asdf_version`
   * `asdf` version to install
-  * **Default:** v0.6.2
+  * **Default:** `v0.6.2`
+* ### `skip_shell_setup`
+  * If `True` will only install `asdf` without setting up the shell
+  * **Default:** `False`
 
 ## Example Playbook
 ```
@@ -62,10 +65,6 @@ Source: [official 'asdf' setup](https://github.com/asdf-vm/asdf#setup)
   tasks:
     - include_role:
         name: FlorianKempenich.toocs_asdf
-      vars:
-        python_versions:
-          - 3.7.0
-          - 2.7.15
 
 # OR
 
@@ -75,6 +74,7 @@ Source: [official 'asdf' setup](https://github.com/asdf-vm/asdf#setup)
         name: FlorianKempenich.toocs_asdf
       vars:
         asdf_version: v0.6.1
+        skip_shell_setup: True
 ```
 
 ## License
