@@ -39,3 +39,6 @@
     dest: "{{ ansible_env.HOME }}/.asdf"
     version: "{{ asdf_version }}"
     force: yes
+
+- name: "Set up shell"
+  import_tasks: setup-shell.yml

@@ -1,0 +1,17 @@
+- name: Configure for ZSH
+  when: "ansible_user_shell is match('.*\/zsh')"
+  blockinfile:
+    path: "{{ ansible_env.HOME }}/.zlogin"
+    create: yes
+    marker: "# TOOCS Managed - 'asdf' setup - {mark}"
+    block: |
+      source $HOME/.asdf/asdf.sh
+      source $HOME/.asdf/completions/asdf.bash
+
+- name: Warn if not supported
+  when: "ansible_user_shell is not match('.*\/zsh')"
+  debug:
+    msg:
+      - '/!\ Warning /!\'
+      - 'On shells other than `zsh` (for the moment), manual setup is required!'
+      - 'See: https://github.com/asdf-vm/asdf#setup'
