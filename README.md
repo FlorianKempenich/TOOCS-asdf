@@ -1,7 +1,7 @@
-[![Build Status](https://travis-ci.org/TOOCS/asdf.svg?branch=master)](https://travis-ci.org/TOOCS/asdf) [![Ansible Role](https://img.shields.io/ansible/role/36152.svg)](https://galaxy.ansible.com/FlorianKempenich/toocs_asdf)
+[![Build Status](https://travis-ci.org/TOOCS/asdf.svg?branch=master)](https://travis-ci.org/TOOCS/asdf) [![Ansible Role](https://img.shields.io/ansible/role/36152.svg)](https://galaxy.ansible.com/TOOCS/asdf)
 
 
-# TOOCS / Ansible Role: `FlorianKempenich.toocs_asdf`
+# TOOCS / Ansible Role: `TOOCS.asdf`
 
 * Installs `asdf`
 * For `zsh` users, sets up `~/.zlogin` for a ready-to-use experience
@@ -64,14 +64,14 @@ Source: [official 'asdf' setup](https://github.com/asdf-vm/asdf#setup)
 - hosts: sandbox
   tasks:
     - include_role:
-        name: FlorianKempenich.toocs_asdf
+        name: TOOCS.asdf
 
 # OR
 
 - hosts: sandbox
   tasks:
     - include_role:
-        name: FlorianKempenich.toocs_asdf
+        name: TOOCS.asdf
       vars:
         asdf_version: v0.6.1
         skip_shell_setup: True
