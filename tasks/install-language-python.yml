@@ -1,0 +1,62 @@
+- name: "Install language: 'python' - Install requirements"
+  block:
+    - name: "Install language: 'python' - Install requirements - UBUNTU"
+      apt:
+        name:
+          - build-essential
+          - libssl-dev
+          - zlib1g-dev
+          - libbz2-dev
+          - libreadline-dev
+          - libsqlite3-dev
+          - wget
+          - curl
+          - llvm
+          - libncurses5-dev
+          - libncursesw5-dev
+          - xz-utils
+          - tk-dev
+          - libffi-dev
+          - liblzma-dev
+        state: latest
+        update_cache: yes
+      become: yes
+      when: ansible_os_family == "Debian"
+
+    - name: "Install language: 'python' - Install requirements - OSX - 1/2"
+      homebrew:
+        name:
+          - openssl
+          - readline
+          - sqlite3
+          - xz
+          - zlib
+          - pkg-config # Thx: https://github.com/pyenv/pyenv/issues/1184#issuecomment-433683530
+        state: latest
+        update_homebrew: yes
+      become: no
+      when: ansible_os_family == "Darwin"
+
+    - name: "Install language: 'python' - Install requirements - OSX - 2/2"
+      # Install the additional SDK headers when Mojave or higher (10.14+)
+      # See: https://github.com/pyenv/pyenv/wiki#suggested-build-environment
+      command: installer -pkg /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg -target /
+      become: yes
+      when: ansible_os_family == "Darwin" and ansible_distribution_version >= "10.14"
+
+- name: "Install language: 'python' - Add 'python' plugin"
+  shell: ". {{ ansible_env.HOME }}/.asdf/asdf.sh && asdf plugin-add python"
+  register: add_plugin_cmd
+  failed_when: add_plugin_cmd.rc != 0 and add_plugin_cmd.rc != 2
+  changed_when: add_plugin_cmd.rc != 2
+
+- name: "Install language: 'python' - Install all 'python' versions: {{ versions }}"
+  shell: ". {{ ansible_env.HOME }}/.asdf/asdf.sh && asdf install python {{ version }}"
+  register: install_python_version_cmd
+  changed_when: install_python_version_cmd.stdout is not search('already installed')
+  loop: "{{ versions }}"
+  loop_control:
+    loop_var: version
+
+- name: "Install language: 'python' - Set global 'python' versions: {{ versions }}"
+  shell: ". {{ ansible_env.HOME }}/.asdf/asdf.sh && asdf global python {{ versions | join(' ') }}"

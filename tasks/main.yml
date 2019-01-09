@@ -43,3 +43,14 @@
 - name: "Set up shell"
   import_tasks: setup-shell.yml
   when: not skip_shell_setup
+
+- name: Load available_languages
+  set_fact:
+     available_languages: "{{ (lookup('fileglob', 'tasks/install-language-*.yml')).split(',') | map('basename') | map('regex_replace', 'install-language-(.*)\\.yml', '\\1') | list }}"
+
+- name: "Install languages"
+  include_tasks: install-language.yml
+  vars:
+    language: "{{ item.key }}"
+    versions: "{{ item.value }}"
+  loop: "{{ languages_to_install|default({})|dict2items }}"

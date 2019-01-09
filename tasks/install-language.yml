@@ -1,0 +1,17 @@
+- name: "Install language: '{{ language }}' - Check supported"
+  assert:
+    that:
+      - language in available_languages
+    msg: |
+        Language '{{ language }}' is not supported
+        Available languages: {{ available_languages }}
+
+- name: "Install language: '{{ language }}' - Check versions passed as param"
+  assert:
+    that:
+      - versions != ""
+    msg: "Language '{{ language }}' is supported but NO VERSIONS TO INSTALL HAVE BEEN SPECIFIED, see README.md"
+
+- name: "Install language: '{{ language }}' - Load installation tasks"
+  include_tasks: "{{ 'install-language-' + language + '.yml' }}"
+
