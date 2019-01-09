@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/TOOCS/asdf.svg?branch=master)](https://travis-ci.org/TOOCS/asdf) [![Ansible Role](https://img.shields.io/ansible/role/36152.svg)](https://galaxy.ansible.com/TOOCS/asdf)
+[![Build Status](https://travis-ci.org/TOOCS/asdf.svg?branch=master)](https://travis-ci.org/TOOCS/asdf) [![Ansible Role](https://img.shields.io/ansible/role/36195.svg)](https://galaxy.ansible.com/TOOCS/asdf)
 
 
 # TOOCS / Ansible Role: `TOOCS.asdf`
