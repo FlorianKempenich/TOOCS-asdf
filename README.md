@@ -85,10 +85,10 @@ The variable `languages_to_install` is a list containing all the languages to in
     - elixir:
         - 1.7.4
   ```
-  In this example, both versions of `erlang` will be installed **before** `elixir` installed. This is convenient since `elixir` requires `erlang` to be installed.
+  In this example, both versions of `erlang` will be installed **before** `elixir` is installed. This is convenient since `elixir` requires `erlang` to be compiled.
 
 * ### For each language, the list of _versions to install_ is also **ordered**.
-  * The **first** version from the list will be set as global
+  * The **first** version of the list will be set as `global`
   * For languages supporting multiple simultaneous `global`, all versions from the list, in order, will be set as global (ex: python)
   ```yaml
   languages_to_install:
@@ -121,7 +121,7 @@ The variable `languages_to_install` is a list containing all the languages to in
 * **Elixir**
   * **Requires `erlang`**
   * Explicitely compiled from source
-  * /!\ Make sure the current version of `erlang` is supported by the version of `elixir` to install /!\
+  * **/!\ Make sure the current version of `erlang` is supported by the version of `elixir` to install /!\\**
     * Ex: `elixir v1.6.6` is not compatible with `erlang 21`! To compile `elixir v1.6.6`, `erlang 20` must be used.
 
 
