@@ -47,3 +47,6 @@
   loop: "{{ versions }}"
   loop_control:
     loop_var: version
+
+- name: "Install language: 'erlang' - Set global 'erlang' versions: {{ versions }}"
+  shell: ". {{ ansible_env.HOME }}/.asdf/asdf.sh && asdf global erlang {{ versions | join(' ') }}"
