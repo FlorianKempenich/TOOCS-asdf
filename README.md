@@ -168,8 +168,8 @@ The variable `languages_to_install` is a list containing all the languages to in
               - 2.6.6
 
           - erlang:
-              - 21.1.4
               - 20.3.8.9
+              - 21.1.4
 
           - elixir:
               - 1.7.4
