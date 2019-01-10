@@ -1,0 +1,48 @@
+- name: "Install language: 'elixir' - Install requirements"
+  block:
+    - name: "Install language: 'elixir' - Install requirements - UBUNTU"
+      apt:
+        name:
+          - build-essential
+          - autoconf
+          - m4
+          - libncurses5-dev
+          - libwxgtk3.0-dev
+          - libgl1-mesa-dev
+          - libglu1-mesa-dev
+          - libpng3
+          - libssh-dev
+          - unixodbc-dev
+          - xsltproc
+          - fop
+        state: latest
+        update_cache: yes
+      become: yes
+      when: ansible_os_family == "Debian"
+
+    - name: "Install language: 'elixir' - Install requirements - OSX"
+      homebrew:
+        name:
+          - autoconf
+          - wxmac
+        state: latest
+        update_homebrew: yes
+      become: no
+      when: ansible_os_family == "Darwin"
+
+
+- name: "Install language: 'elixir' - Add 'elixir' plugin"
+  shell: ". {{ ansible_env.HOME }}/.asdf/asdf.sh && asdf plugin-add elixir"
+  register: add_plugin_cmd
+  failed_when: add_plugin_cmd.rc != 0 and add_plugin_cmd.rc != 2
+  changed_when: add_plugin_cmd.rc != 2
+
+# - name: "Install language: 'elixir' - Install all 'elixir' versions: {{ versions }}"
+#   environment:
+#     KERL_BUILD_DOCS: yes
+#   shell: ". {{ ansible_env.HOME }}/.asdf/asdf.sh && asdf install elixir {{ version }}"
+#   register: install_elixir_version_cmd
+#   changed_when: install_elixir_version_cmd.stdout is not search('already installed')
+#   loop: "{{ versions }}"
+#   loop_control:
+#     loop_var: version
