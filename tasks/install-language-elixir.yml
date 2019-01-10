@@ -3,32 +3,11 @@
     - name: "Install language: 'elixir' - Install requirements - UBUNTU"
       apt:
         name:
-          - build-essential
-          - autoconf
-          - m4
-          - libncurses5-dev
-          - libwxgtk3.0-dev
-          - libgl1-mesa-dev
-          - libglu1-mesa-dev
-          - libpng3
-          - libssh-dev
-          - unixodbc-dev
-          - xsltproc
-          - fop
+          - unzip
         state: latest
         update_cache: yes
       become: yes
       when: ansible_os_family == "Debian"
-
-    - name: "Install language: 'elixir' - Install requirements - OSX"
-      homebrew:
-        name:
-          - autoconf
-          - wxmac
-        state: latest
-        update_homebrew: yes
-      become: no
-      when: ansible_os_family == "Darwin"
 
 
 - name: "Install language: 'elixir' - Add 'elixir' plugin"
@@ -37,12 +16,19 @@
   failed_when: add_plugin_cmd.rc != 0 and add_plugin_cmd.rc != 2
   changed_when: add_plugin_cmd.rc != 2
 
-# - name: "Install language: 'elixir' - Install all 'elixir' versions: {{ versions }}"
-#   environment:
-#     KERL_BUILD_DOCS: yes
-#   shell: ". {{ ansible_env.HOME }}/.asdf/asdf.sh && asdf install elixir {{ version }}"
-#   register: install_elixir_version_cmd
-#   changed_when: install_elixir_version_cmd.stdout is not search('already installed')
-#   loop: "{{ versions }}"
-#   loop_control:
-#     loop_var: version
+- name: "Build references from version numbers"
+  set_fact:
+    versions_as_refs: "{{ versions | map('regex_replace', '^', 'ref:v') | list }}"
+
+- name: "Install language: 'elixir' - Install all 'elixir' versions: {{ versions }}"
+  environment:
+    KERL_BUILD_DOCS: yes
+  shell: ". {{ ansible_env.HOME }}/.asdf/asdf.sh && asdf install elixir {{ version_as_ref }}"
+  register: install_elixir_version_cmd
+  changed_when: install_elixir_version_cmd.stdout is not search('already installed')
+  loop: "{{ versions_as_refs }}"
+  loop_control:
+    loop_var: version_as_ref
+
+- name: "Install language: 'elixir' - Set global 'elixir' versions: {{ versions }}"
+  shell: ". {{ ansible_env.HOME }}/.asdf/asdf.sh && asdf global elixir {{ versions_as_refs | join(' ') }}"
