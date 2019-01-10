@@ -14,4 +14,3 @@
 
 - name: "Install language: '{{ language }}' - Load installation tasks"
   include_tasks: "{{ 'install-language-' + language + '.yml' }}"
-

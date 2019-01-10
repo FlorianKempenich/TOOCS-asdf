@@ -51,6 +51,6 @@
 - name: "Install languages"
   include_tasks: install-language.yml
   vars:
-    language: "{{ item.key }}"
-    versions: "{{ item.value }}"
-  loop: "{{ languages_to_install|default({})|dict2items }}"
+    language: "{{ item.items()[0][0] }}"
+    versions: "{{ item.items()[0][1] }}"
+  loop: "{{ languages_to_install }}"
