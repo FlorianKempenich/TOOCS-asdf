@@ -116,6 +116,7 @@ The variable `languages_to_install` is a list containing all the languages to in
 ### Supported Languages
 * **Python**
   * Support for multiple `global` versions
+  * On Debian stretch (and Ubuntu bionic), only python versions `>= 2.7.13` and `>= 3.5.3` can be installed automatically. Earlier versions can later be manually installed, but it needs a workaround at the moment. See: [Pyenv - Common Build Problems - OpenSSL](https://github.com/pyenv/pyenv/wiki/common-build-problems#error-the-python-ssl-extension-was-not-compiled-missing-the-openssl-lib)
 * **Erlang**
   * Compiled with documentation but no `jinterface`
 * **Elixir**
