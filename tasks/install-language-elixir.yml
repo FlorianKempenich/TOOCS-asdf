@@ -12,6 +12,8 @@
 
 - name: "Install language: 'elixir' - Add 'elixir' plugin"
   shell: ". {{ ansible_env.HOME }}/.asdf/asdf.sh && asdf plugin-add elixir"
+  args:
+    executable: /bin/bash
   register: add_plugin_cmd
   failed_when: add_plugin_cmd.rc != 0 and add_plugin_cmd.rc != 2
   changed_when: add_plugin_cmd.rc != 2
@@ -24,6 +26,8 @@
   environment:
     KERL_BUILD_DOCS: yes
   shell: ". {{ ansible_env.HOME }}/.asdf/asdf.sh && asdf install elixir {{ version_as_ref }}"
+  args:
+    executable: /bin/bash
   register: install_elixir_version_cmd
   changed_when: install_elixir_version_cmd.stdout is not search('already installed')
   loop: "{{ versions_as_refs }}"
@@ -32,3 +36,5 @@
 
 - name: "Install language: 'elixir' - Set global 'elixir' versions: {{ versions }}"
   shell: ". {{ ansible_env.HOME }}/.asdf/asdf.sh && asdf global elixir {{ versions_as_refs | join(' ') }}"
+  args:
+    executable: /bin/bash

@@ -33,6 +33,8 @@
 
 - name: "Install language: 'erlang' - Add 'erlang' plugin"
   shell: ". {{ ansible_env.HOME }}/.asdf/asdf.sh && asdf plugin-add erlang"
+  args:
+    executable: /bin/bash
   register: add_plugin_cmd
   failed_when: add_plugin_cmd.rc != 0 and add_plugin_cmd.rc != 2
   changed_when: add_plugin_cmd.rc != 2
@@ -42,6 +44,8 @@
     KERL_BUILD_DOCS: yes
     KERL_CONFIGURE_OPTIONS: "--disable-debug --without-javac"
   shell: ". {{ ansible_env.HOME }}/.asdf/asdf.sh && asdf install erlang {{ version }}"
+  args:
+    executable: /bin/bash
   register: install_erlang_version_cmd
   changed_when: install_erlang_version_cmd.stdout is not search('already installed')
   loop: "{{ versions }}"
@@ -50,3 +54,5 @@
 
 - name: "Install language: 'erlang' - Set global 'erlang' versions: {{ versions }}"
   shell: ". {{ ansible_env.HOME }}/.asdf/asdf.sh && asdf global erlang {{ versions | join(' ') }}"
+  args:
+    executable: /bin/bash

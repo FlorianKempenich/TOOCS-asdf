@@ -46,12 +46,16 @@
 
 - name: "Install language: 'python' - Add 'python' plugin"
   shell: ". {{ ansible_env.HOME }}/.asdf/asdf.sh && asdf plugin-add python"
+  args:
+    executable: /bin/bash
   register: add_plugin_cmd
   failed_when: add_plugin_cmd.rc != 0 and add_plugin_cmd.rc != 2
   changed_when: add_plugin_cmd.rc != 2
 
 - name: "Install language: 'python' - Install all 'python' versions: {{ versions }}"
   shell: ". {{ ansible_env.HOME }}/.asdf/asdf.sh && asdf install python {{ version }}"
+  args:
+    executable: /bin/bash
   register: install_python_version_cmd
   changed_when: install_python_version_cmd.stdout is not search('already installed')
   loop: "{{ versions }}"
@@ -60,3 +64,5 @@
 
 - name: "Install language: 'python' - Set global 'python' versions: {{ versions }}"
   shell: ". {{ ansible_env.HOME }}/.asdf/asdf.sh && asdf global python {{ versions | join(' ') }}"
+  args:
+    executable: /bin/bash
