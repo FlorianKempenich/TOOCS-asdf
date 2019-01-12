@@ -35,7 +35,7 @@
 
 - name: "Install `asdf` - Version: {{ asdf_version }} - Checkout `asdf` to `~/.asdf`"
   git:
-    repo: "git@github.com:asdf-vm/asdf.git"
+    repo: "https://github.com/asdf-vm/asdf.git"
     dest: "{{ ansible_env.HOME }}/.asdf"
     version: "{{ asdf_version }}"
     force: yes
