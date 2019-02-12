@@ -44,6 +44,16 @@
       become: yes
       when: ansible_os_family == "Darwin" and ansible_distribution_version >= "10.14"
 
+    - name: "OSX Only: Set the compilation environment variables"
+      # This fixes a problem where python was not compiled with 'readline': 'module readline is not available'
+      # Thx: https://github.com/danhper/asdf-python/issues/43#issuecomment-447020011
+      set_fact:
+        python_compilation_env_var:
+          LDFLAGS: "-L/usr/local/opt/zlib/lib"
+          CPPFLAGS: "-I/usr/local/opt/zlib/include"
+          hello: "yo"
+      when: ansible_os_family == "Darwin"
+
 - name: "Install language: 'python' - Add 'python' plugin"
   shell: ". {{ ansible_env.HOME }}/.asdf/asdf.sh && asdf plugin-add python"
   args:
@@ -56,6 +66,7 @@
   shell: ". {{ ansible_env.HOME }}/.asdf/asdf.sh && asdf install python {{ version }}"
   args:
     executable: /bin/bash
+  environment: "{{ python_compilation_env_var | default({}) }}"
   register: install_python_version_cmd
   changed_when: install_python_version_cmd.stdout is not search('already installed')
   loop: "{{ versions }}"
