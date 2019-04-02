@@ -43,7 +43,7 @@
   environment:
     KERL_BUILD_DOCS: yes
     KERL_CONFIGURE_OPTIONS: "--disable-debug --without-javac"
-  shell: ". {{ ansible_env.HOME }}/.asdf/asdf.sh && asdf install erlang {{ version }}"
+  shell: ". /etc/profile && . {{ ansible_env.HOME }}/.asdf/asdf.sh && asdf install erlang {{ version }}"
   args:
     executable: /bin/bash
   register: install_erlang_version_cmd
