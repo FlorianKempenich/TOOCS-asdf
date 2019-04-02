@@ -25,7 +25,7 @@
 - name: "Install language: 'elixir' - Install all 'elixir' versions: {{ versions }}"
   environment:
     KERL_BUILD_DOCS: yes
-  shell: ". {{ ansible_env.HOME }}/.asdf/asdf.sh && asdf install elixir {{ version_as_ref }}"
+  shell: ". /etc/profile && . {{ ansible_env.HOME }}/.asdf/asdf.sh && asdf install elixir {{ version_as_ref }}"
   args:
     executable: /bin/bash
   register: install_elixir_version_cmd

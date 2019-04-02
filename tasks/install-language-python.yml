@@ -46,7 +46,7 @@
   block:
     - name: "Install language: 'python' - Set compilation flags - OSX Only - 1/2 - Build"
       shell: |
-        PATH=$PATH:/usr/local/bin/ # Add brew to PATH
+        . /etc/profile # Fix PATH
 
         CFLAGS="-I$(brew --prefix openssl)/include -I$(brew --prefix readline)/include"
         CPPFLAGS="-I$(brew --prefix zlib)/include"
@@ -63,12 +63,11 @@
           CFLAGS: "{{ compilation_flags.stdout_lines[0] }}"
           CPPFLAGS: "{{ compilation_flags.stdout_lines[1] }}"
           LDFLAGS: "{{ compilation_flags.stdout_lines[2] }}"
-          PATH: "{{ ansible_env.PATH}}:/usr/local/bin" # Add brew to path
 
   when: ansible_os_family == "Darwin"
 
 - name: "Install language: 'python' - Add 'python' plugin"
-  shell: ". {{ ansible_env.HOME }}/.asdf/asdf.sh && asdf plugin-add python"
+  shell: ". /etc/profile && . {{ ansible_env.HOME }}/.asdf/asdf.sh && asdf plugin-add python"
   args:
     executable: /bin/bash
   register: add_plugin_cmd
@@ -76,7 +75,7 @@
   changed_when: add_plugin_cmd.rc != 2
 
 - name: "Install language: 'python' - Install all 'python' versions: {{ versions }}"
-  shell: ". {{ ansible_env.HOME }}/.asdf/asdf.sh && asdf install python {{ version }}"
+  shell: ". /etc/profile && . {{ ansible_env.HOME }}/.asdf/asdf.sh && asdf install python {{ version }}"
   args:
     executable: /bin/bash
   environment: "{{ python_compilation_env_var | default({}) }}"
@@ -87,6 +86,6 @@
     loop_var: version
 
 - name: "Install language: 'python' - Set global 'python' versions: {{ versions }}"
-  shell: ". {{ ansible_env.HOME }}/.asdf/asdf.sh && asdf global python {{ versions | join(' ') }}"
+  shell: ". /etc/profile && . {{ ansible_env.HOME }}/.asdf/asdf.sh && asdf global python {{ versions | join(' ') }}"
   args:
     executable: /bin/bash
