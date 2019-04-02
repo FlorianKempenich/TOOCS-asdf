@@ -23,7 +23,7 @@
       become: yes
       when: ansible_os_family == "Debian"
 
-    - name: "Install language: 'python' - Install requirements - OSX - 1/2"
+    - name: "Install language: 'python' - Install requirements - OSX"
       homebrew:
         name:
           - openssl
@@ -37,22 +37,35 @@
       become: no
       when: ansible_os_family == "Darwin"
 
-    - name: "Install language: 'python' - Install requirements - OSX - 2/2"
-      # Install the additional SDK headers when Mojave or higher (10.14+)
-      # See: https://github.com/pyenv/pyenv/wiki#suggested-build-environment
-      command: installer -pkg /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg -target /
-      become: yes
-      when: ansible_os_family == "Darwin" and ansible_distribution_version >= "10.14"
+- name: "Install language: 'python' - Set compilation flags - OSX Only"
+  # This sets the compiler flags so that python is installed using the following dependencies from Homebrew:
+  #  - zlib => `"-I$(brew --prefix zlib)/include"`
+  #  - openssl => `-I$(brew --prefix openssl)/include` and `-L$(brew --prefix openssl)/lib`
+  #  - readline => `-I$(brew --prefix readline)/include` and `-L$(brew --prefix readline)/lib"`
+  # For more info, see: https://github.com/pyenv/pyenv/wiki/Common-build-problems
+  block:
+    - name: "Install language: 'python' - Set compilation flags - OSX Only - 1/2 - Build"
+      shell: |
+        PATH=$PATH:/usr/local/bin/ # Add brew to PATH
 
-    - name: "OSX Only: Set the compilation environment variables"
-      # This fixes a problem where python was not compiled with 'readline': 'module readline is not available'
-      # Thx: https://github.com/danhper/asdf-python/issues/43#issuecomment-447020011
+        CFLAGS="-I$(brew --prefix openssl)/include -I$(brew --prefix readline)/include"
+        CPPFLAGS="-I$(brew --prefix zlib)/include"
+        LDFLAGS="-L$(brew --prefix openssl)/lib -L$(brew --prefix readline)/lib"
+
+        echo $CFLAGS
+        echo $CPPFLAGS
+        echo $LDFLAGS
+      register: compilation_flags
+
+    - name: "Install language: 'python' - Set compilation flags - OSX Only - 1/2 - Set"
       set_fact:
         python_compilation_env_var:
-          LDFLAGS: "-L/usr/local/opt/zlib/lib"
-          CPPFLAGS: "-I/usr/local/opt/zlib/include"
-          hello: "yo"
-      when: ansible_os_family == "Darwin"
+          CFLAGS: "{{ compilation_flags.stdout_lines[0] }}"
+          CPPFLAGS: "{{ compilation_flags.stdout_lines[1] }}"
+          LDFLAGS: "{{ compilation_flags.stdout_lines[2] }}"
+          PATH: "{{ ansible_env.PATH}}:/usr/local/bin" # Add brew to path
+
+  when: ansible_os_family == "Darwin"
 
 - name: "Install language: 'python' - Add 'python' plugin"
   shell: ". {{ ansible_env.HOME }}/.asdf/asdf.sh && asdf plugin-add python"
